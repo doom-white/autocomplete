@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     const getDataTimeOut = setTimeout(() => {
       function getData() {
-        fetch("https://jsonplaceholder.typicode.com/photos")
+        fetch("https://jsonplaceholder.typicode.com/users")
           .then((res) => res.json())
           .then((data) => setContainerData(data));
       }
@@ -47,7 +47,7 @@ const App = () => {
       setWait(true);
       setResult(
         containerData.filter((cd) =>
-          cd.title.toLowerCase().includes(search.toLowerCase())
+          cd.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     } else {
@@ -76,8 +76,8 @@ const App = () => {
                 placeholder={<Loader />}
               >
                 <div key={r.id} className="search-result-item">
-                  <img src={r.thumbnailUrl} alt="thumbnailImage" />
-                  <div>{r.title}</div>
+                  {/* <img src={r.thumbnailUrl} alt="thumbnailImage" /> */}
+                  <div>{r.name}</div>
                 </div>
               </LazyLoad>
             ))}
