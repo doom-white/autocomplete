@@ -27,7 +27,7 @@ const App = () => {
   useEffect(() => {
     if (isTyping) {
       async function getData() {
-        await fetch("https://jsonplaceholder.typicode.com/posts")
+        await fetch("https://jsonplaceholder.typicode.com/photos")
           .then((res) => res.json())
           .then((data) => {
             setWait(true);
@@ -38,6 +38,7 @@ const App = () => {
             );
           });
       }
+
       getData();
     } else {
       setWait(false);
@@ -59,7 +60,8 @@ const App = () => {
           <div className="search-result">
             {result.map((r) => (
               <div key={r.id} className="search-result-item">
-                {r.title}
+                <img src={r.thumbnailUrl} alt="thumbnailImage" />
+                <div>{r.title}</div>
               </div>
             ))}
             {wait && result.length === 0 && (

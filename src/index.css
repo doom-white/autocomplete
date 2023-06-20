@@ -60,6 +60,24 @@ body {
 
 .search .search-result .search-result-item {
   padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  transition: all 150ms linear;
+  -webkit-transition: all 150ms linear;
+  -moz-transition: all 150ms linear;
+  -ms-transition: all 150ms linear;
+  -o-transition: all 150ms linear;
+}
+
+.search .search-result .search-result-item:hover {
+  background-color: antiquewhite;
+  cursor: pointer;
+}
+
+.search .search-result .search-result-item img {
+  width: 40px;
+  height: 40px;
+  margin-right: 25px;
 }
 
 .search .search-result .result-not-found {
