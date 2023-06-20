@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import LazyLoad from "react-lazyload-v18";
+import Loader from "./components/Loader";
 
 const App = () => {
   const [search, setSearch] = useState("");
   const [result, setResult] = useState([]);
+  const [containerData, setContainerData] = useState([]);
   const [wait, setWait] = useState(false);
 
   const searchRef = useRef();
@@ -25,26 +28,33 @@ const App = () => {
   //#endregion
 
   useEffect(() => {
-    if (isTyping) {
-      async function getData() {
-        await fetch("https://jsonplaceholder.typicode.com/photos")
+    const getDataTimeOut = setTimeout(() => {
+      function getData() {
+        fetch("https://jsonplaceholder.typicode.com/photos")
           .then((res) => res.json())
-          .then((data) => {
-            setWait(true);
-            setResult(
-              data.filter((d) =>
-                d.title.toLowerCase().includes(search.toLowerCase())
-              )
-            );
-          });
+          .then((data) => setContainerData(data));
       }
 
       getData();
+    }, 500);
+    return () => {
+      clearTimeout(getDataTimeOut);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isTyping) {
+      setWait(true);
+      setResult(
+        containerData.filter((cd) =>
+          cd.title.toLowerCase().includes(search.toLowerCase())
+        )
+      );
     } else {
       setWait(false);
       setResult([]);
     }
-  }, [search, isTyping]);
+  }, [search, containerData, isTyping]);
 
   return (
     <>
@@ -59,10 +69,17 @@ const App = () => {
         {isTyping && (
           <div className="search-result">
             {result.map((r) => (
-              <div key={r.id} className="search-result-item">
-                <img src={r.thumbnailUrl} alt="thumbnailImage" />
-                <div>{r.title}</div>
-              </div>
+              <LazyLoad
+                key={r.id}
+                once={true}
+                overflow={true}
+                placeholder={<Loader />}
+              >
+                <div key={r.id} className="search-result-item">
+                  <img src={r.thumbnailUrl} alt="thumbnailImage" />
+                  <div>{r.title}</div>
+                </div>
+              </LazyLoad>
             ))}
             {wait && result.length === 0 && (
               <div className="result-not-found">
